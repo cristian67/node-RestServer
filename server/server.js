@@ -1,6 +1,7 @@
 require('./config/config.js');
 
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 
 const bodyParser = require('body-parser');
@@ -9,44 +10,17 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-//Mostrar
-app.get('/usuario', function(req, res) {
-    res.json('get usuario')
-})
+//Usuar rutas de usuario
+app.use(require('../routes/usuario'));
 
-//Crear
-app.post('/usuario', function(req, res) {
+//Conectar a BDD
+mongoose.connect(process.env.URLDB, (err, res) => {
+    if (err) throw err;
+    console.log("Conectado a BDD")
 
-    let body = req.body;
-
-    if (body.nombre === undefined) {
-
-        res.status(400).json({
-            ok: false,
-            mensaje: 'El nombre es necesario'
-        });
-
-    } else {
-        res.json({
-            body
-        });
-    }
-})
-
-//Actualizar
-app.put('/usuario/:id', function(req, res) {
-    let id = req.params.id;
-    res.json({
-        id
-    });
-})
-
-//Borrar
-app.delete('/usuario', function(req, res) {
-    res.json('delete usuario')
-})
+});
 
 //Levantar servicio
 app.listen(process.env.PORT, () => {
