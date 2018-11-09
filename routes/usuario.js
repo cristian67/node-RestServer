@@ -2,19 +2,28 @@ const express = require('express');
 const app = express();
 
 const Usuario = require('../models/usuario');
+const { verificaToken } = require('../server/middleware/autenticacion')
+
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 
 //Mostrar
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
+
+    return res.json({
+        usuario: req.usuario,
+        nombre: req.usuario.nombre,
+        email: req.usuario.email
+    })
+
 
     //numero de paginas
     let desde = req.query.desde || 0;
     //Castear numero
     desde = Number(desde);
     //Limite 
-    let limite = req.query.limite || 5;
+    let limite = req.query.limite || 50;
     limite = Number(limite);
     Usuario.find({ estado: true })
         .skip(desde)
@@ -26,7 +35,6 @@ app.get('/usuario', function(req, res) {
                     err
                 });
             }
-
             Usuario.count({ estado: true }, (err, conteo) => {
                 res.json({
                     ok: true,
@@ -41,7 +49,7 @@ app.get('/usuario', function(req, res) {
 
 
 //Actualizar
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', verificaToken, function(req, res) {
     //obtener id
     let id = req.params.id;
     //obtener body
@@ -72,7 +80,7 @@ app.put('/usuario/:id', function(req, res) {
 });
 
 //Crear
-app.post('/usuario', function(req, res) {
+app.post('/usuario', verificaToken, function(req, res) {
 
     let body = req.body;
     //Iniciarlizar Usuario
@@ -100,7 +108,7 @@ app.post('/usuario', function(req, res) {
 })
 
 //Borrar
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', verificaToken, function(req, res) {
     //obtener id
     let id = req.params.id;
     //Eliminar

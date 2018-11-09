@@ -12,17 +12,17 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json());
 
-//Usuar rutas de usuario
-app.use(require('../routes/usuario'));
+// Config global de rutas
+app.use(require('../routes/index'));
 
-//Conectar a BDD
+// Conectar a BDD
 mongoose.connect(process.env.URLDB, (err, res) => {
     if (err) throw err;
     console.log("Conectado a BDD")
 
 });
 
-//Levantar servicio
+// Levantar servicio
 app.listen(process.env.PORT, () => {
     console.log("escuchando puerto:", 3000)
 });
