@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 const Usuario = require('../models/usuario');
-const { verificaToken } = require('../server/middleware/autenticacion')
+let { verificaToken } = require('../../server/middleware/autenticacion');
 
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
@@ -15,13 +15,14 @@ app.get('/usuario', verificaToken, (req, res) => {
         usuario: req.usuario,
         nombre: req.usuario.nombre,
         email: req.usuario.email
-    })
-
+    });
 
     //numero de paginas
     let desde = req.query.desde || 0;
+
     //Castear numero
     desde = Number(desde);
+
     //Limite 
     let limite = req.query.limite || 50;
     limite = Number(limite);
@@ -41,11 +42,11 @@ app.get('/usuario', verificaToken, (req, res) => {
                     usuarios,
                     registros: conteo
                 });
-            })
+            });
 
-        })
+        });
 
-})
+});
 
 
 //Actualizar
@@ -74,7 +75,7 @@ app.put('/usuario/:id', verificaToken, function(req, res) {
             ok: true,
             usuario: usuarioDB
         });
-    })
+    });
 
 
 });
@@ -105,7 +106,7 @@ app.post('/usuario', verificaToken, function(req, res) {
             usuario: usuarioDB
         });
     });
-})
+});
 
 //Borrar
 app.delete('/usuario/:id', verificaToken, function(req, res) {
@@ -141,7 +142,7 @@ app.delete('/usuario/:id', verificaToken, function(req, res) {
             usuario: UsuarioBorrado
         });
     });
-})
+});
 
 
 module.exports = app;

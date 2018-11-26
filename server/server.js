@@ -1,4 +1,4 @@
-require('./config/config.js');
+require('./config/config');
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -16,8 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 // Config global de rutas
-app.use(require('../routes/index'));
-
+app.use(require('./routes/index'));
 
 //Habilitar el carpeta public 
 app.use(express.static(path.resolve(__dirname, '../public')));
@@ -26,7 +25,6 @@ app.use(express.static(path.resolve(__dirname, '../public')));
 mongoose.connect(process.env.URLDB, (err, res) => {
     if (err) throw err;
     console.log("Conectado a BDD")
-
 });
 
 // Levantar servicio
