@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+
+
 //===================
 //Verificar TOKEN
 //===================
@@ -16,7 +18,7 @@ let verificaToken = (req, res, next) => {
                 }
             });
         }
-        //el decoded es el payload
+        //el decoded es el payload  
         req.usuario = decoded.usuario;
         //mandar la peticion
         next();
@@ -45,7 +47,38 @@ let verificaAdmin_Role = (req, res, next) => {
 };
 
 
+
+// =====================
+// Verifica Imagen
+// =====================
+let verificaTokenImg = (req, res, next) => {
+
+    //lo que va en la url como: ?token=
+    let token = req.query.token;
+
+    //Verificar el Token, si es valido
+    jwt.verify(token, process.env.SEED, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                ok: false,
+                err: {
+                    message: 'token no valido'
+                }
+            });
+        }
+
+        //el decoded es el payload  
+        req.usuario = decoded.usuario;
+        //mandar la peticion
+        next();
+    });
+
+};
+
+
+
 module.exports = {
     verificaToken,
-    verificaAdmin_Role
+    verificaAdmin_Role,
+    verificaTokenImg
 }
